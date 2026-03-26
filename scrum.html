@@ -214,11 +214,11 @@ textarea{resize:vertical;min-height:82px;line-height:1.65;}
         <div class="ff">
           <label class="ff-lbl">오늘의 에너지 <span class="ff-req">*</span></label>
           <div class="score-sel">
-            <div class="s-opt" onclick="pickScore(this,'VERY HIGH')"><span class="se">🔥</span><span class="sl">Very High</span></div>
-            <div class="s-opt" onclick="pickScore(this,'HIGH')"><span class="se">😄</span><span class="sl">High</span></div>
-            <div class="s-opt" onclick="pickScore(this,'MIDDLE')"><span class="se">😐</span><span class="sl">Middle</span></div>
-            <div class="s-opt" onclick="pickScore(this,'LOW')"><span class="se">😴</span><span class="sl">Low</span></div>
-            <div class="s-opt" onclick="pickScore(this,'VERY LOW')"><span class="se">💀</span><span class="sl">Very Low</span></div>
+            <div class="s-opt" data-val="VERY HIGH" onclick="pickScore(this,'VERY HIGH')"><span class="se">🔥</span><span class="sl">Very High</span></div>
+            <div class="s-opt" data-val="HIGH" onclick="pickScore(this,'HIGH')"><span class="se">😄</span><span class="sl">High</span></div>
+            <div class="s-opt" data-val="MIDDLE" onclick="pickScore(this,'MIDDLE')"><span class="se">😐</span><span class="sl">Middle</span></div>
+            <div class="s-opt" data-val="LOW" onclick="pickScore(this,'LOW')"><span class="se">😴</span><span class="sl">Low</span></div>
+            <div class="s-opt" data-val="VERY LOW" onclick="pickScore(this,'VERY LOW')"><span class="se">💀</span><span class="sl">Very Low</span></div>
           </div>
         </div>
         <div class="ff full"><label class="ff-lbl">이유</label><textarea id="fReason" placeholder="왜 그 에너지인가요? 한 줄이라도 괜찮아요 🙂"></textarea></div>
@@ -298,7 +298,12 @@ async function submitScrum(){
   finally{btn.innerHTML='<span>제출하기</span><span>🚀</span>';btn.disabled=false;}
 }
 function renderAll(data){
-  const submitted=data.map(r=>r.name);
+  // 같은 날 같은 이름 중복 제거 — 마지막 행 우선
+  const deduped=[];
+  const seen={};
+  [...data].reverse().forEach(r=>{if(!seen[r.name]){seen[r.name]=true;deduped.unshift(r);}});
+
+  const submitted=deduped.map(r=>r.name);
   const pending=MEMBERS.filter(m=>!submitted.includes(m));
   const pct=Math.round(submitted.length/TOTAL*100);
   document.getElementById('stDone').textContent=submitted.length;
@@ -307,8 +312,8 @@ function renderAll(data){
   document.getElementById('stBar').style.width=pct+'%';
   const order=getDayOrder();
   document.getElementById('orderChips').innerHTML=order.map((n,i)=>`<div class="o-chip"><span class="cn">${i+1}</span><span>${n}</span></div>${i<order.length-1?'<span class="o-sep">›</span>':''}`).join('');
-  renderFame(submitted,pending,data);
-  renderCards(data,order);
+  renderFame(submitted,pending,deduped);
+  renderCards(deduped,order);
 }
 function renderFame(submitted,pending,data){
   const box=document.getElementById('fameBox');
@@ -318,6 +323,32 @@ function renderFame(submitted,pending,data){
   box.innerHTML=`${submitted.length>0?`<div class="fame-head"><span class="fame-icon">🏆</span><span class="fame-title">명예의 전당</span><span class="fame-count">${submitted.length}명 완료</span></div><div class="fame-chips" style="margin-bottom:18px">${byTime.map((n,i)=>`<div class="fame-chip">${['🥇','🥈','🥉'][i]||'🏅'} ${n}</div>`).join('')}</div>`:''}
   <div class="fame-head" style="margin-bottom:10px"><span class="fame-icon">🫵</span><span class="fame-title" style="color:var(--rose-dark)">아직 안 쓰신 분들</span><span class="fame-count" style="border-color:var(--rose-border);color:var(--rose-dark)">${pending.length}명</span></div>
   <div class="roast-rows">${pending.map((n,i)=>`<div class="roast-row"><span class="roast-e">🫠</span><div><span class="roast-name">${n}</span><span class="roast-msg"> — ${ROASTS[i%ROASTS.length](n)}</span></div></div>`).join('')}</div>`;
+}
+function formatTimestamp(ts){
+  if(!ts) return '';
+  // 시트가 Date로 변환한 경우 ("1899-..." 또는 ISO string)
+  if(String(ts).includes('T')||String(ts).includes('1899')){
+    const d=new Date(ts);
+    if(!isNaN(d)){
+      const kst=new Date(d.getTime()+9*3600*1000);
+      return String(kst.getUTCHours()).padStart(2,'0')+':'+String(kst.getUTCMinutes()).padStart(2,'0');
+    }
+  }
+  return String(ts);
+}
+function fillForm(entry){
+  document.getElementById('fName').value=entry.name;
+  document.getElementById('fReason').value=entry.reason||'';
+  document.getElementById('fDone').value=entry.done||'';
+  document.getElementById('fTodo').value=entry.todo||'';
+  document.getElementById('fIssue').value=entry.issue||'';
+  selScore=entry.score||'';
+  document.querySelectorAll('.s-opt').forEach(o=>{
+    o.classList.toggle('on', o.dataset.val===entry.score);
+  });
+  updateTitle();
+  document.getElementById('formAnchor').scrollIntoView({behavior:'smooth'});
+  showToast('✏️ 수정 모드 — 내용 변경 후 다시 제출해주세요');
 }
 function renderCards(data,order){
   const grid=document.getElementById('cardsGrid');grid.innerHTML='';
@@ -330,7 +361,8 @@ function renderCards(data,order){
       const s=SCORE[entry.score]||SCORE['MIDDLE'];
       const dp=String(entry.done||'').split('\n').filter(Boolean);
       const tp=String(entry.todo||'').split('\n').filter(Boolean);
-      card.innerHTML=`<div class="scard-top ${s.pal}"></div><div class="scard-body"><div class="scard-hd"><span class="scard-name">${entry.name}</span><div class="scard-score"><span class="scard-e">${s.e}</span><span class="scard-badge ${s.badge}">${s.lbl}</span></div></div>${entry.reason?`<div class="scard-quote">"${entry.reason}"</div>`:''}<div class="scard-div"></div><div class="scard-sec"><span class="scard-sec-lbl">✅ 완료한 일</span><div class="scard-sec-body">${dp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||entry.done}</div></div><div class="scard-sec"><span class="scard-sec-lbl">📌 앞으로 할 일</span><div class="scard-sec-body">${tp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||entry.todo}</div></div>${entry.issue?`<div class="scard-sec"><span class="scard-sec-lbl">💬 이슈/공유</span><div class="scard-sec-body">${entry.issue}</div></div>`:''}<span class="scard-time">제출 ${entry.timestamp||''}</span></div>`;
+      const ts=formatTimestamp(entry.timestamp);
+      card.innerHTML=`<div class="scard-top ${s.pal}"></div><div class="scard-body"><div class="scard-hd"><span class="scard-name">${entry.name}</span><div class="scard-score"><span class="scard-e">${s.e}</span><span class="scard-badge ${s.badge}">${s.lbl}</span></div></div>${entry.reason?`<div class="scard-quote">"${entry.reason}"</div>`:''}<div class="scard-div"></div><div class="scard-sec"><span class="scard-sec-lbl">✅ 완료한 일</span><div class="scard-sec-body">${dp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||String(entry.done)}</div></div><div class="scard-sec"><span class="scard-sec-lbl">📌 앞으로 할 일</span><div class="scard-sec-body">${tp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||String(entry.todo)}</div></div>${entry.issue?`<div class="scard-sec"><span class="scard-sec-lbl">💬 이슈/공유</span><div class="scard-sec-body">${String(entry.issue)}</div></div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:4px;"><span class="scard-time">제출 ${ts}</span><button onclick='fillForm(${JSON.stringify(entry).replace(/'/g,"&#39;")})' style="font-size:10px;font-weight:700;color:var(--ink-soft);background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;">✏️ 수정</button></div></div>`;
     }else{
       card.innerHTML=`<div class="empty-inner"><span class="empty-face">🫥</span><span class="empty-name">${name}</span><span class="empty-msg">${ROASTS[idx%ROASTS.length](name)}</span></div>`;
     }
