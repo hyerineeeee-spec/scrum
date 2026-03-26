@@ -248,7 +248,7 @@ const ROASTS=[
   n=>`${n}님이 작성 안 하셔서 팀 전체가 궁금증에 빠져 있어요. 오늘 무사하신 거 맞죠?`,
   n=>`${n}님의 공란이 오늘의 포인트입니다. 의도하신 건가요, 퍼포먼스인가요?`,
 ];
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyPVWH8X1r4IHiLn3OuDBRNyktDQC_HPb-iJ1iJRYSQ9Jsk6IyHvbc5dJb1prZIERtmSw/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyUvkaLQHAwN2VDctuZKObp6cpLn42NTAhSps49XhvkeQI_iNuOcfJGqAvb_4pTOWb2bw/exec';
 let selScore='';
 function kstDate(){return new Date(Date.now()+9*3600*1000).toISOString().slice(0,10);}
 function kstDisplay(){const d=new Date(Date.now()+9*3600*1000);const days=['일','월','화','수','목','금','토'];return `${d.getUTCFullYear()}.${String(d.getUTCMonth()+1).padStart(2,'0')}.${String(d.getUTCDate()).padStart(2,'0')} (${days[d.getUTCDay()]})`;}
