@@ -253,7 +253,7 @@ let selScore='';
 function kstDate(){return new Date(Date.now()+9*3600*1000).toISOString().slice(0,10);}
 function kstDisplay(){const d=new Date(Date.now()+9*3600*1000);const days=['일','월','화','수','목','금','토'];return `${d.getUTCFullYear()}.${String(d.getUTCMonth()+1).padStart(2,'0')}.${String(d.getUTCDate()).padStart(2,'0')} (${days[d.getUTCDay()]})`;}
 function getDayOrder(){const key='order_'+kstDate();let o=JSON.parse(localStorage.getItem(key)||'null');if(!o||o.length!==MEMBERS.length||!MEMBERS.every(m=>o.includes(m))){o=[...MEMBERS].sort(()=>Math.random()-0.5);localStorage.setItem(key,JSON.stringify(o));}return o;}
-async function loadData(){try{const res=await fetch(SCRIPT_URL);const all=await res.json();renderAll(all.filter(r=>r.date===kstDate()));}catch(e){renderAll([]);}}
+async function loadData(){try{const res=await fetch(SCRIPT_URL+'?t='+Date.now());const all=await res.json();renderAll(all.filter(r=>r.date===kstDate()));}catch(e){renderAll([]);}}
 async function submitScrum(){
   const name=document.getElementById('fName').value;
   const done=document.getElementById('fDone').value.trim();
@@ -265,8 +265,8 @@ async function submitScrum(){
   const btn=document.getElementById('subBtn');
   btn.innerHTML='<span>제출 중...</span>';btn.disabled=true;
   try{
-    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({date:kstDate(),name,score:selScore,reason:document.getElementById('fReason').value.trim(),done,todo,issue:document.getElementById('fIssue').value.trim(),timestamp:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}),headers:{'Content-Type':'application/json'}});
-    showToast('🎉 제출 완료! 수고했어요 '+name+'님 🌿');resetForm();await loadData();
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({date:kstDate(),name,score:selScore,reason:document.getElementById('fReason').value.trim(),done,todo,issue:document.getElementById('fIssue').value.trim(),timestamp:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}),headers:{'Content-Type':'application/json'}});
+    showToast('🎉 제출 완료! 수고했어요 '+name+'님 🌿');resetForm();setTimeout(()=>loadData(),2000);
   }catch(e){showToast('❌ 제출 실패. 네트워크를 확인해주세요.');}
   finally{btn.innerHTML='<span>제출하기</span><span>🚀</span>';btn.disabled=false;}
 }
