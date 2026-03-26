@@ -164,49 +164,10 @@ textarea{resize:vertical;min-height:82px;line-height:1.65;}
 </header>
 <main>
   <div>
-    <p class="sec-label">⚙️ 연동 설정</p>
-    <div class="cfg-box">
-      <div class="cfg-head"><span style="font-size:18px">📊</span><span class="cfg-title">Google Sheets 연동</span><span style="font-size:11px;color:#9e7ef0;margin-left:auto;">처음 한 번만!</span></div>
-      <div class="cfg-row">
-        <span class="cfg-lbl">Apps Script URL</span>
-        <input class="cfg-input" id="cfgUrl" placeholder="https://script.google.com/macros/s/..."/>
-        <button class="cfg-btn" onclick="saveConfig()">저장</button>
-      </div>
-    </div>
-    <details class="guide" style="margin-top:10px">
-      <summary>📖 Google Apps Script 설정하는 법</summary>
-      <div class="guide-body">
-        <div class="g-step"><span class="g-num">1</span><span class="g-txt">구글 시트 새 파일 생성 → 시트 이름을 <span class="g-code">scrum</span> 으로 변경</span></div>
-        <div class="g-step"><span class="g-num">2</span><span class="g-txt">1행 헤더: <span class="g-code">date</span> <span class="g-code">name</span> <span class="g-code">score</span> <span class="g-code">reason</span> <span class="g-code">done</span> <span class="g-code">todo</span> <span class="g-code">issue</span> <span class="g-code">timestamp</span></span></div>
-        <div class="g-step"><span class="g-num">3</span><span class="g-txt">확장 프로그램 → Apps Script → 아래 코드 붙여넣기 후 저장</span></div>
-        <div class="g-pre">function doGet(e) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('scrum');
-  const data = sheet.getDataRange().getValues();
-  const headers = data[0];
-  const rows = data.slice(1).map(r => {
-    const obj = {};
-    headers.forEach((h, i) => obj[h] = r[i]);
-    return obj;
-  });
-  return ContentService.createTextOutput(JSON.stringify(rows))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-function doPost(e) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('scrum');
-  const d = JSON.parse(e.postData.contents);
-  sheet.appendRow([d.date,d.name,d.score,d.reason,d.done,d.todo,d.issue,d.timestamp]);
-  return ContentService.createTextOutput(JSON.stringify({ok:true}))
-    .setMimeType(ContentService.MimeType.JSON);
-}</div>
-        <div class="g-step"><span class="g-num">4</span><span class="g-txt">배포 → 새 배포 → 웹 앱, 액세스: 모든 사용자 → URL 복사 후 위에 입력</span></div>
-      </div>
-    </details>
-  </div>
-  <div>
     <p class="sec-label">📊 오늘의 현황</p>
     <div class="stats-row">
       <div class="stat-pill"><span class="stat-num" id="stDone">0</span><span class="stat-lbl">제출 완료 ✅</span></div>
-      <div class="stat-pill"><span class="stat-num" id="stPending" style="color:#e05555">8</span><span class="stat-lbl">아직 안 씀 🙈</span></div>
+      <div class="stat-pill"><span class="stat-num" id="stPending" style="color:#e05555">9</span><span class="stat-lbl">아직 안 씀 🙈</span></div>
       <div class="stat-pill prog-pill">
         <div class="prog-info"><span class="prog-title">오늘의 완료율</span><span class="prog-pct" id="stPct">0%</span></div>
         <div class="prog-track"><div class="prog-fill" id="stBar" style="width:0%"></div></div>
@@ -246,7 +207,7 @@ function doPost(e) {
               <option value="">이름 선택 👇</option>
               <option>김혜린</option><option>김문일</option><option>윤희섭</option>
               <option>차연수</option><option>김주용</option><option>김진영</option>
-              <option>신형종</option><option>강미란</option>
+              <option>신형종</option><option>강미란</option><option>김형기</option>
             </select>
           </div>
         </div>
@@ -274,7 +235,7 @@ function doPost(e) {
 </main>
 <div class="toast" id="toast"></div>
 <script>
-const MEMBERS=['김혜린','김문일','윤희섭','차연수','김주용','김진영','신형종','강미란'];
+const MEMBERS=['김혜린','김문일','윤희섭','차연수','김주용','김진영','신형종','강미란','김형기'];
 const TOTAL=MEMBERS.length;
 const SCORE={'VERY HIGH':{e:'🔥',lbl:'VERY HIGH',pal:'p-vh',badge:'b-vh',pct:100},'HIGH':{e:'😄',lbl:'HIGH',pal:'p-h',badge:'b-h',pct:75},'MIDDLE':{e:'😐',lbl:'MIDDLE',pal:'p-m',badge:'b-m',pct:50},'LOW':{e:'😴',lbl:'LOW',pal:'p-l',badge:'b-l',pct:25},'VERY LOW':{e:'💀',lbl:'VERY LOW',pal:'p-vl',badge:'b-vl',pct:5}};
 const ROASTS=[
@@ -287,13 +248,12 @@ const ROASTS=[
   n=>`${n}님이 작성 안 하셔서 팀 전체가 궁금증에 빠져 있어요. 오늘 무사하신 거 맞죠?`,
   n=>`${n}님의 공란이 오늘의 포인트입니다. 의도하신 건가요, 퍼포먼스인가요?`,
 ];
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxdAN-iEk4mn0igDx703aWsuQ6wtHOU10eH0ihG0DnxCzmCDSEEfGq3dgNVDShFsMOelA/exec';
 let selScore='';
 function kstDate(){return new Date(Date.now()+9*3600*1000).toISOString().slice(0,10);}
 function kstDisplay(){const d=new Date(Date.now()+9*3600*1000);const days=['일','월','화','수','목','금','토'];return `${d.getUTCFullYear()}.${String(d.getUTCMonth()+1).padStart(2,'0')}.${String(d.getUTCDate()).padStart(2,'0')} (${days[d.getUTCDay()]})`;}
-function getDayOrder(){const key='order_'+kstDate();let o=JSON.parse(localStorage.getItem(key)||'null');if(!o){o=[...MEMBERS].sort(()=>Math.random()-0.5);localStorage.setItem(key,JSON.stringify(o));}return o;}
-function saveConfig(){const url=document.getElementById('cfgUrl').value.trim();if(!url){showToast('❌ URL을 입력해주세요');return;}localStorage.setItem('scriptUrl',url);showToast('✅ 저장 완료!');loadData();}
-function loadConfig(){document.getElementById('cfgUrl').value=localStorage.getItem('scriptUrl')||'';}
-async function loadData(){const url=localStorage.getItem('scriptUrl');if(!url){renderAll([]);return;}try{const res=await fetch(url);const all=await res.json();renderAll(all.filter(r=>r.date===kstDate()));}catch(e){renderAll([]);}}
+function getDayOrder(){const key='order_'+kstDate();let o=JSON.parse(localStorage.getItem(key)||'null');if(!o||o.length!==MEMBERS.length||!MEMBERS.every(m=>o.includes(m))){o=[...MEMBERS].sort(()=>Math.random()-0.5);localStorage.setItem(key,JSON.stringify(o));}return o;}
+async function loadData(){try{const res=await fetch(SCRIPT_URL);const all=await res.json();renderAll(all.filter(r=>r.date===kstDate()));}catch(e){renderAll([]);}}
 async function submitScrum(){
   const name=document.getElementById('fName').value;
   const done=document.getElementById('fDone').value.trim();
@@ -302,12 +262,10 @@ async function submitScrum(){
   if(!selScore){showToast('❌ 오늘의 에너지를 선택해주세요');return;}
   if(!done){showToast('❌ 완료한 일을 입력해주세요');return;}
   if(!todo){showToast('❌ 앞으로 할 일을 입력해주세요');return;}
-  const url=localStorage.getItem('scriptUrl');
-  if(!url){showToast('❌ Apps Script URL을 먼저 설정해주세요');return;}
   const btn=document.getElementById('subBtn');
   btn.innerHTML='<span>제출 중...</span>';btn.disabled=true;
   try{
-    await fetch(url,{method:'POST',body:JSON.stringify({date:kstDate(),name,score:selScore,reason:document.getElementById('fReason').value.trim(),done,todo,issue:document.getElementById('fIssue').value.trim(),timestamp:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}),headers:{'Content-Type':'application/json'}});
+    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({date:kstDate(),name,score:selScore,reason:document.getElementById('fReason').value.trim(),done,todo,issue:document.getElementById('fIssue').value.trim(),timestamp:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})}),headers:{'Content-Type':'application/json'}});
     showToast('🎉 제출 완료! 수고했어요 '+name+'님 🌿');resetForm();await loadData();
   }catch(e){showToast('❌ 제출 실패. 네트워크를 확인해주세요.');}
   finally{btn.innerHTML='<span>제출하기</span><span>🚀</span>';btn.disabled=false;}
@@ -359,7 +317,7 @@ function scrollToForm(){document.getElementById('formAnchor').scrollIntoView({be
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);}
 setInterval(loadData,60000);
 document.getElementById('hdDate').textContent=kstDisplay();
-loadConfig();updateTitle();loadData();
+updateTitle();loadData();
 </script>
 </body>
 </html>
