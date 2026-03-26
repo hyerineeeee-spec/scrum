@@ -248,12 +248,27 @@ const ROASTS=[
   n=>`${n}님이 작성 안 하셔서 팀 전체가 궁금증에 빠져 있어요. 오늘 무사하신 거 맞죠?`,
   n=>`${n}님의 공란이 오늘의 포인트입니다. 의도하신 건가요, 퍼포먼스인가요?`,
 ];
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxdAN-iEk4mn0igDx703aWsuQ6wtHOU10eH0ihG0DnxCzmCDSEEfGq3dgNVDShFsMOelA/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyPVWH8X1r4IHiLn3OuDBRNyktDQC_HPb-iJ1iJRYSQ9Jsk6IyHvbc5dJb1prZIERtmSw/exec';
 let selScore='';
 function kstDate(){return new Date(Date.now()+9*3600*1000).toISOString().slice(0,10);}
 function kstDisplay(){const d=new Date(Date.now()+9*3600*1000);const days=['일','월','화','수','목','금','토'];return `${d.getUTCFullYear()}.${String(d.getUTCMonth()+1).padStart(2,'0')}.${String(d.getUTCDate()).padStart(2,'0')} (${days[d.getUTCDay()]})`;}
 function getDayOrder(){const key='order_'+kstDate();let o=JSON.parse(localStorage.getItem(key)||'null');if(!o||o.length!==MEMBERS.length||!MEMBERS.every(m=>o.includes(m))){o=[...MEMBERS].sort(()=>Math.random()-0.5);localStorage.setItem(key,JSON.stringify(o));}return o;}
-async function loadData(){try{const res=await fetch(SCRIPT_URL+'?t='+Date.now());const all=await res.json();renderAll(all.filter(r=>r.date===kstDate()));}catch(e){renderAll([]);}}
+async function loadData(){
+  return new Promise(resolve=>{
+    const cb='cb_'+Date.now();
+    window[cb]=function(all){
+      delete window[cb];
+      document.getElementById('jsonpScript')?.remove();
+      renderAll(all.filter(r=>r.date===kstDate()));
+      resolve();
+    };
+    const s=document.createElement('script');
+    s.id='jsonpScript';
+    s.src=SCRIPT_URL+'?callback='+cb+'&t='+Date.now();
+    s.onerror=()=>{delete window[cb];renderAll([]);resolve();};
+    document.head.appendChild(s);
+  });
+}
 async function submitScrum(){
   const name=document.getElementById('fName').value;
   const done=document.getElementById('fDone').value.trim();
