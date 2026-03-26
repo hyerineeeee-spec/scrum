@@ -328,8 +328,8 @@ function renderCards(data,order){
     card.style.animationDelay=(idx*0.05)+'s';
     if(entry){
       const s=SCORE[entry.score]||SCORE['MIDDLE'];
-      const dp=(entry.done||'').split('\n').filter(Boolean);
-      const tp=(entry.todo||'').split('\n').filter(Boolean);
+      const dp=String(entry.done||'').split('\n').filter(Boolean);
+      const tp=String(entry.todo||'').split('\n').filter(Boolean);
       card.innerHTML=`<div class="scard-top ${s.pal}"></div><div class="scard-body"><div class="scard-hd"><span class="scard-name">${entry.name}</span><div class="scard-score"><span class="scard-e">${s.e}</span><span class="scard-badge ${s.badge}">${s.lbl}</span></div></div>${entry.reason?`<div class="scard-quote">"${entry.reason}"</div>`:''}<div class="scard-div"></div><div class="scard-sec"><span class="scard-sec-lbl">✅ 완료한 일</span><div class="scard-sec-body">${dp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||entry.done}</div></div><div class="scard-sec"><span class="scard-sec-lbl">📌 앞으로 할 일</span><div class="scard-sec-body">${tp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||entry.todo}</div></div>${entry.issue?`<div class="scard-sec"><span class="scard-sec-lbl">💬 이슈/공유</span><div class="scard-sec-body">${entry.issue}</div></div>`:''}<span class="scard-time">제출 ${entry.timestamp||''}</span></div>`;
     }else{
       card.innerHTML=`<div class="empty-inner"><span class="empty-face">🫥</span><span class="empty-name">${name}</span><span class="empty-msg">${ROASTS[idx%ROASTS.length](name)}</span></div>`;
