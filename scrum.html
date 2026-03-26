@@ -254,20 +254,11 @@ function kstDate(){return new Date(Date.now()+9*3600*1000).toISOString().slice(0
 function kstDisplay(){const d=new Date(Date.now()+9*3600*1000);const days=['일','월','화','수','목','금','토'];return `${d.getUTCFullYear()}.${String(d.getUTCMonth()+1).padStart(2,'0')}.${String(d.getUTCDate()).padStart(2,'0')} (${days[d.getUTCDay()]})`;}
 function getDayOrder(){const key='order_'+kstDate();let o=JSON.parse(localStorage.getItem(key)||'null');if(!o||o.length!==MEMBERS.length||!MEMBERS.every(m=>o.includes(m))){o=[...MEMBERS].sort(()=>Math.random()-0.5);localStorage.setItem(key,JSON.stringify(o));}return o;}
 async function loadData(){
-  return new Promise(resolve=>{
-    const cb='cb_'+Date.now();
-    window[cb]=function(all){
-      delete window[cb];
-      document.getElementById('jsonpScript')?.remove();
-      renderAll(all.filter(r=>r.date===kstDate()));
-      resolve();
-    };
-    const s=document.createElement('script');
-    s.id='jsonpScript';
-    s.src=SCRIPT_URL+'?callback='+cb+'&t='+Date.now();
-    s.onerror=()=>{delete window[cb];renderAll([]);resolve();};
-    document.head.appendChild(s);
-  });
+  try{
+    const res=await fetch(SCRIPT_URL+'?t='+Date.now());
+    const all=await res.json();
+    renderAll(all.filter(r=>r.date===kstDate()));
+  }catch(e){renderAll([]);}
 }
 async function submitScrum(){
   const name=document.getElementById('fName').value;
