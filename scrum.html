@@ -6,18 +6,7 @@
 <title>🌱 Daily Scrum</title>
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --cream:#faf8f3;--paper:#fff9ef;--white:#ffffff;--peach:#ffebe0;--peach-border:#ffd4bb;
-  --mint:#e3f5f0;--mint-border:#b8e8de;--mint-dark:#2aab8c;--lavender:#ede8f8;
-  --lavender-border:#d4c8f0;--yellow:#fff9d6;--yellow-border:#ffe896;
-  --rose:#fde8e8;--rose-border:#f9c2c2;--rose-dark:#e05555;
-  --ink:#2d2a26;--ink-mid:#6b6560;--ink-soft:#a09890;--ink-faint:#cdc7be;--border:#ede8e0;
-  --shadow-xs:0 1px 4px rgba(60,40,20,0.06);
-  --shadow-sm:0 2px 8px rgba(60,40,20,0.08),0 1px 3px rgba(60,40,20,0.05);
-  --shadow-md:0 6px 20px rgba(60,40,20,0.10),0 2px 6px rgba(60,40,20,0.06);
-  --shadow-lg:0 16px 40px rgba(60,40,20,0.12),0 4px 12px rgba(60,40,20,0.07);
-  --r:16px;--r-sm:10px;--r-xs:6px;
-}
+:root{--cream:#faf8f3;--paper:#fff9ef;--white:#ffffff;--peach:#ffebe0;--peach-border:#ffd4bb;--mint:#e3f5f0;--mint-border:#b8e8de;--mint-dark:#2aab8c;--lavender:#ede8f8;--lavender-border:#d4c8f0;--yellow:#fff9d6;--yellow-border:#ffe896;--rose:#fde8e8;--rose-border:#f9c2c2;--rose-dark:#e05555;--ink:#2d2a26;--ink-mid:#6b6560;--ink-soft:#a09890;--ink-faint:#cdc7be;--border:#ede8e0;--shadow-xs:0 1px 4px rgba(60,40,20,0.06);--shadow-sm:0 2px 8px rgba(60,40,20,0.08),0 1px 3px rgba(60,40,20,0.05);--shadow-md:0 6px 20px rgba(60,40,20,0.10),0 2px 6px rgba(60,40,20,0.06);--shadow-lg:0 16px 40px rgba(60,40,20,0.12),0 4px 12px rgba(60,40,20,0.07);--r:16px;--r-sm:10px;--r-xs:6px;}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 80% 60% at 10% 20%,rgba(255,220,195,0.35) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 90% 80%,rgba(200,240,228,0.35) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 50% 50%,rgba(237,232,248,0.25) 0%,transparent 70%);pointer-events:none;}
@@ -80,7 +69,10 @@ main{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:28px 20p
 .scard-sec{display:flex;flex-direction:column;gap:4px;}
 .scard-sec-lbl{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-faint);}
 .scard-sec-body{font-size:12px;color:var(--ink);line-height:1.65;}
-.scard-time{font-size:10px;color:var(--ink-faint);margin-top:auto;padding-top:4px;font-family:monospace;}
+.scard-time{font-size:10px;color:var(--ink-faint);font-family:monospace;}
+.scard-ft{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:4px;}
+.edit-btn{font-size:10px;font-weight:700;color:var(--ink-soft);background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;transition:all 0.15s;}
+.edit-btn:hover{border-color:var(--ink);color:var(--ink);}
 .scard.empty{background:var(--cream);border-style:dashed;min-height:160px;align-items:center;justify-content:center;}
 .empty-inner{padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;}
 .empty-face{font-size:30px;}
@@ -88,26 +80,6 @@ main{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:28px 20p
 .empty-msg{font-size:11px;color:var(--rose-dark);line-height:1.55;max-width:180px;}
 .p-vh{background:linear-gradient(90deg,#ffd166,#ff9a3c)}.p-h{background:linear-gradient(90deg,#6edcb8,#2aab8c)}.p-m{background:linear-gradient(90deg,#7ec8f7,#4fa8e8)}.p-l{background:linear-gradient(90deg,#c4a8f7,#9e7ef0)}.p-vl{background:linear-gradient(90deg,#f79a9a,#e05555)}
 .b-vh{background:#fff3d6;color:#b06000}.b-h{background:#d6f5ec;color:#1a7a5e}.b-m{background:#d6eeff;color:#1a5f9e}.b-l{background:#ede6ff;color:#5e3db3}.b-vl{background:#fde6e6;color:#b03030}
-.cfg-box{background:var(--lavender);border:1.5px solid var(--lavender-border);border-radius:var(--r);padding:18px 22px;}
-.cfg-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-.cfg-title{font-family:'Gaegu',cursive;font-size:16px;font-weight:700;color:#5b3eb5;}
-.cfg-row{display:flex;gap:10px;align-items:center;}
-.cfg-lbl{font-size:11px;font-weight:700;color:#7a5cc0;width:100px;flex-shrink:0;}
-.cfg-input{flex:1;font-family:monospace;font-size:12px;background:var(--white);border:1.5px solid var(--lavender-border);border-radius:var(--r-xs);padding:7px 12px;color:var(--ink);outline:none;}
-.cfg-input:focus{border-color:#9e7ef0;}
-.cfg-btn{font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;color:var(--white);background:linear-gradient(135deg,#b79ff5,#9e7ef0);border:none;border-radius:var(--r-xs);padding:7px 18px;cursor:pointer;transition:opacity 0.2s;}
-.cfg-btn:hover{opacity:0.85;}
-.guide{background:var(--yellow);border:1.5px solid var(--yellow-border);border-radius:var(--r);overflow:hidden;}
-.guide summary{padding:14px 20px;font-size:13px;font-weight:700;color:#8a6800;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;user-select:none;}
-.guide summary::-webkit-details-marker{display:none;}
-.guide summary::before{content:'▶';font-size:9px;transition:transform 0.2s;}
-.guide[open] summary::before{transform:rotate(90deg);}
-.guide-body{padding:0 20px 18px;display:flex;flex-direction:column;gap:10px;}
-.g-step{display:flex;gap:10px;}
-.g-num{font-family:'Gaegu',cursive;font-size:12px;font-weight:700;background:#8a6800;color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.g-txt{font-size:12px;color:#6b5000;line-height:1.65;}
-.g-code{font-family:monospace;font-size:11px;background:#fff8d0;border:1px solid #ffe896;border-radius:4px;padding:1px 6px;color:#7a4800;}
-.g-pre{font-family:monospace;font-size:11px;line-height:1.7;background:#fff8d0;border:1px solid #ffe896;border-radius:8px;padding:12px 14px;color:#6b4000;overflow-x:auto;white-space:pre;}
 .form-box{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-md);overflow:hidden;}
 .form-hd{background:linear-gradient(135deg,#ffb899,#ff8a65);padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;}
 .form-hd-left{display:flex;flex-direction:column;gap:3px;}
@@ -167,7 +139,7 @@ textarea{resize:vertical;min-height:82px;line-height:1.65;}
     <p class="sec-label">📊 오늘의 현황</p>
     <div class="stats-row">
       <div class="stat-pill"><span class="stat-num" id="stDone">0</span><span class="stat-lbl">제출 완료 ✅</span></div>
-      <div class="stat-pill"><span class="stat-num" id="stPending" style="color:#e05555">9</span><span class="stat-lbl">아직 안 씀 🙈</span></div>
+      <div class="stat-pill"><span class="stat-num" id="stPending" style="color:#e05555">8</span><span class="stat-lbl">아직 안 씀 🙈</span></div>
       <div class="stat-pill prog-pill">
         <div class="prog-info"><span class="prog-title">오늘의 완료율</span><span class="prog-pct" id="stPct">0%</span></div>
         <div class="prog-track"><div class="prog-fill" id="stBar" style="width:0%"></div></div>
@@ -205,9 +177,9 @@ textarea{resize:vertical;min-height:82px;line-height:1.65;}
           <div class="sel-wrap">
             <select id="fName" onchange="updateTitle()">
               <option value="">이름 선택 👇</option>
-              <option>김혜린</option><option>김문일</option><option>윤희섭</option>
-              <option>차연수</option><option>김주용</option><option>김진영</option>
-              <option>신형종</option><option>강미란</option><option>김형기</option>
+              <option>김문일</option><option>윤희섭</option><option>차연수</option>
+              <option>김주용</option><option>김진영</option><option>신형종</option>
+              <option>강미란</option><option>김형기</option>
             </select>
           </div>
         </div>
@@ -235,9 +207,10 @@ textarea{resize:vertical;min-height:82px;line-height:1.65;}
 </main>
 <div class="toast" id="toast"></div>
 <script>
-const MEMBERS=['김혜린','김문일','윤희섭','차연수','김주용','김진영','신형종','강미란','김형기'];
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyUvkaLQHAwN2VDctuZKObp6cpLn42NTAhSps49XhvkeQI_iNuOcfJGqAvb_4pTOWb2bw/exec';
+const MEMBERS=['김문일','윤희섭','차연수','김주용','김진영','신형종','강미란','김형기'];
 const TOTAL=MEMBERS.length;
-const SCORE={'VERY HIGH':{e:'🔥',lbl:'VERY HIGH',pal:'p-vh',badge:'b-vh',pct:100},'HIGH':{e:'😄',lbl:'HIGH',pal:'p-h',badge:'b-h',pct:75},'MIDDLE':{e:'😐',lbl:'MIDDLE',pal:'p-m',badge:'b-m',pct:50},'LOW':{e:'😴',lbl:'LOW',pal:'p-l',badge:'b-l',pct:25},'VERY LOW':{e:'💀',lbl:'VERY LOW',pal:'p-vl',badge:'b-vl',pct:5}};
+const SCORE={'VERY HIGH':{e:'🔥',lbl:'VERY HIGH',pal:'p-vh',badge:'b-vh'},'HIGH':{e:'😄',lbl:'HIGH',pal:'p-h',badge:'b-h'},'MIDDLE':{e:'😐',lbl:'MIDDLE',pal:'p-m',badge:'b-m'},'LOW':{e:'😴',lbl:'LOW',pal:'p-l',badge:'b-l'},'VERY LOW':{e:'💀',lbl:'VERY LOW',pal:'p-vl',badge:'b-vl'}};
 const ROASTS=[
   n=>`${n}님, 스크럼 작성란이 오늘도 공란입니다. 손가락 건강 괜찮으신가요?`,
   n=>`${n}님은 현재 팀의 미스터리입니다. 오늘 뭘 하셨는지 아무도 모름.`,
@@ -248,16 +221,20 @@ const ROASTS=[
   n=>`${n}님이 작성 안 하셔서 팀 전체가 궁금증에 빠져 있어요. 오늘 무사하신 거 맞죠?`,
   n=>`${n}님의 공란이 오늘의 포인트입니다. 의도하신 건가요, 퍼포먼스인가요?`,
 ];
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyUvkaLQHAwN2VDctuZKObp6cpLn42NTAhSps49XhvkeQI_iNuOcfJGqAvb_4pTOWb2bw/exec';
 let selScore='';
+
 function kstDate(){return new Date(Date.now()+9*3600*1000).toISOString().slice(0,10);}
 function kstDisplay(){const d=new Date(Date.now()+9*3600*1000);const days=['일','월','화','수','목','금','토'];return `${d.getUTCFullYear()}.${String(d.getUTCMonth()+1).padStart(2,'0')}.${String(d.getUTCDate()).padStart(2,'0')} (${days[d.getUTCDay()]})`;}
-// 날짜를 시드로 쓰는 고정 랜덤 — 누가 어디서 열어도 같은 순서
+
+// 날짜 기반 고정 시드 셔플 — 누가 어디서 열어도 같은 순서
 function seededRandom(seed){
-  let s=seed;
+  let s=seed^0x9e3779b9;
+  for(let i=0;i<20;i++){s=Math.imul(s^(s>>>15),0x85ebca6b);s=Math.imul(s^(s>>>13),0xc2b2ae35);s=s^(s>>>16);}
   return function(){
-    s=(s*1664525+1013904223)&0xffffffff;
-    return (s>>>0)/0xffffffff;
+    s=Math.imul(s^(s>>>15),0x85ebca6b);
+    s=Math.imul(s^(s>>>13),0xc2b2ae35);
+    s=s^(s>>>16);
+    return (s>>>0)/0x100000000;
   };
 }
 function getDayOrder(){
@@ -271,6 +248,20 @@ function getDayOrder(){
   }
   return arr;
 }
+
+function formatTimestamp(ts){
+  if(!ts) return '';
+  const s=String(ts);
+  if(s.includes('T')||s.startsWith('1899')){
+    const d=new Date(ts);
+    if(!isNaN(d)){
+      const kst=new Date(d.getTime()+9*3600*1000);
+      return String(kst.getUTCHours()).padStart(2,'0')+':'+String(kst.getUTCMinutes()).padStart(2,'0');
+    }
+  }
+  return s;
+}
+
 async function loadData(){
   return new Promise(resolve=>{
     const cb='cb_'+Date.now();
@@ -283,13 +274,13 @@ async function loadData(){
         const s=String(r.date).slice(0,10);
         if(s===today) return true;
         const d=new Date(r.date);
-        if(!isNaN(d)){
-          const kst=new Date(d.getTime()+9*3600*1000);
-          return kst.toISOString().slice(0,10)===today;
-        }
+        if(!isNaN(d)){const kst=new Date(d.getTime()+9*3600*1000);return kst.toISOString().slice(0,10)===today;}
         return false;
       });
-      renderAll(filtered);
+      // 중복 제거 — 같은 이름 마지막 행 우선
+      const deduped=[];const seen={};
+      [...filtered].reverse().forEach(r=>{if(!seen[r.name]){seen[r.name]=true;deduped.unshift(r);}});
+      renderAll(deduped);
       resolve();
     };
     const s=document.createElement('script');
@@ -299,6 +290,7 @@ async function loadData(){
     document.head.appendChild(s);
   });
 }
+
 async function submitScrum(){
   const name=document.getElementById('fName').value;
   const done=document.getElementById('fDone').value.trim();
@@ -311,17 +303,15 @@ async function submitScrum(){
   btn.innerHTML='<span>제출 중...</span>';btn.disabled=true;
   try{
     await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({date:kstDate(),name,score:selScore,reason:document.getElementById('fReason').value.trim(),done,todo,issue:document.getElementById('fIssue').value.trim(),timestamp:new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})})});
-    showToast('🎉 제출 완료! 수고했어요 '+name+'님 🌿');resetForm();setTimeout(()=>loadData(),2000);
+    showToast('🎉 제출 완료! 수고했어요 '+name+'님 🌿');
+    resetForm();
+    setTimeout(()=>loadData(),2000);
   }catch(e){showToast('❌ 제출 실패. 네트워크를 확인해주세요.');}
   finally{btn.innerHTML='<span>제출하기</span><span>🚀</span>';btn.disabled=false;}
 }
-function renderAll(data){
-  // 같은 날 같은 이름 중복 제거 — 마지막 행 우선
-  const deduped=[];
-  const seen={};
-  [...data].reverse().forEach(r=>{if(!seen[r.name]){seen[r.name]=true;deduped.unshift(r);}});
 
-  const submitted=deduped.map(r=>r.name);
+function renderAll(data){
+  const submitted=data.map(r=>r.name);
   const pending=MEMBERS.filter(m=>!submitted.includes(m));
   const pct=Math.round(submitted.length/TOTAL*100);
   document.getElementById('stDone').textContent=submitted.length;
@@ -329,31 +319,32 @@ function renderAll(data){
   document.getElementById('stPct').textContent=pct+'%';
   document.getElementById('stBar').style.width=pct+'%';
   const order=getDayOrder();
-  document.getElementById('orderChips').innerHTML=order.map((n,i)=>`<div class="o-chip"><span class="cn">${i+1}</span><span>${n}</span></div>${i<order.length-1?'<span class="o-sep">›</span>':''}`).join('');
-  renderFame(submitted,pending,deduped);
-  renderCards(deduped,order);
+  document.getElementById('orderChips').innerHTML=order.map((n,i)=>
+    `<div class="o-chip"><span class="cn">${i+1}</span><span>${n}</span></div>${i<order.length-1?'<span class="o-sep">›</span>':''}`
+  ).join('');
+  renderFame(submitted,pending,data);
+  renderCards(data,order);
 }
+
 function renderFame(submitted,pending,data){
   const box=document.getElementById('fameBox');
-  const byTime=submitted.slice().sort((a,b)=>{const ta=data.find(r=>r.name===a)?.timestamp||'';const tb=data.find(r=>r.name===b)?.timestamp||'';return ta<tb?-1:1;});
-  if(pending.length===0){box.style.cssText='border-color:var(--mint-border);background:linear-gradient(135deg,#f0fff5,#e8fdf5)';box.innerHTML=`<div class="fame-head"><span class="fame-icon">🎊</span><span class="fame-title">오늘 전원 완료! 최고예요 🌿</span></div><div class="fame-chips">${byTime.map((n,i)=>`<div class="fame-chip">${['🥇','🥈','🥉'][i]||'🏅'} ${n}</div>`).join('')}</div>`;return;}
-  box.style.cssText='border-color:var(--peach-border);background:linear-gradient(135deg,var(--paper),var(--peach))';
-  box.innerHTML=`${submitted.length>0?`<div class="fame-head"><span class="fame-icon">🏆</span><span class="fame-title">명예의 전당</span><span class="fame-count">${submitted.length}명 완료</span></div><div class="fame-chips" style="margin-bottom:18px">${byTime.map((n,i)=>`<div class="fame-chip">${['🥇','🥈','🥉'][i]||'🏅'} ${n}</div>`).join('')}</div>`:''}
-  <div class="fame-head" style="margin-bottom:10px"><span class="fame-icon">🫵</span><span class="fame-title" style="color:var(--rose-dark)">아직 안 쓰신 분들</span><span class="fame-count" style="border-color:var(--rose-border);color:var(--rose-dark)">${pending.length}명</span></div>
-  <div class="roast-rows">${pending.map((n,i)=>`<div class="roast-row"><span class="roast-e">🫠</span><div><span class="roast-name">${n}</span><span class="roast-msg"> — ${ROASTS[i%ROASTS.length](n)}</span></div></div>`).join('')}</div>`;
-}
-function formatTimestamp(ts){
-  if(!ts) return '';
-  // 시트가 Date로 변환한 경우 ("1899-..." 또는 ISO string)
-  if(String(ts).includes('T')||String(ts).includes('1899')){
-    const d=new Date(ts);
-    if(!isNaN(d)){
-      const kst=new Date(d.getTime()+9*3600*1000);
-      return String(kst.getUTCHours()).padStart(2,'0')+':'+String(kst.getUTCMinutes()).padStart(2,'0');
-    }
+  const byTime=submitted.slice().sort((a,b)=>{
+    const ta=data.find(r=>r.name===a)?.timestamp||'';
+    const tb=data.find(r=>r.name===b)?.timestamp||'';
+    return String(ta)<String(tb)?-1:1;
+  });
+  if(pending.length===0){
+    box.style.cssText='border-color:var(--mint-border);background:linear-gradient(135deg,#f0fff5,#e8fdf5)';
+    box.innerHTML=`<div class="fame-head"><span class="fame-icon">🎊</span><span class="fame-title">오늘 전원 완료! 최고예요 🌿</span></div><div class="fame-chips">${byTime.map((n,i)=>`<div class="fame-chip">${['🥇','🥈','🥉'][i]||'🏅'} ${n}</div>`).join('')}</div>`;
+    return;
   }
-  return String(ts);
+  box.style.cssText='border-color:var(--peach-border);background:linear-gradient(135deg,var(--paper),var(--peach))';
+  box.innerHTML=`
+    ${submitted.length>0?`<div class="fame-head"><span class="fame-icon">🏆</span><span class="fame-title">명예의 전당</span><span class="fame-count">${submitted.length}명 완료</span></div><div class="fame-chips" style="margin-bottom:18px">${byTime.map((n,i)=>`<div class="fame-chip">${['🥇','🥈','🥉'][i]||'🏅'} ${n}</div>`).join('')}</div>`:''}
+    <div class="fame-head" style="margin-bottom:10px"><span class="fame-icon">🫵</span><span class="fame-title" style="color:var(--rose-dark)">아직 안 쓰신 분들</span><span class="fame-count" style="border-color:var(--rose-border);color:var(--rose-dark)">${pending.length}명</span></div>
+    <div class="roast-rows">${pending.map((n,i)=>`<div class="roast-row"><span class="roast-e">🫠</span><div><span class="roast-name">${n}</span><span class="roast-msg"> — ${ROASTS[i%ROASTS.length](n)}</span></div></div>`).join('')}</div>`;
 }
+
 function fillForm(entry){
   document.getElementById('fName').value=entry.name;
   document.getElementById('fReason').value=entry.reason||'';
@@ -361,13 +352,12 @@ function fillForm(entry){
   document.getElementById('fTodo').value=entry.todo||'';
   document.getElementById('fIssue').value=entry.issue||'';
   selScore=entry.score||'';
-  document.querySelectorAll('.s-opt').forEach(o=>{
-    o.classList.toggle('on', o.dataset.val===entry.score);
-  });
+  document.querySelectorAll('.s-opt').forEach(o=>o.classList.toggle('on',o.dataset.val===entry.score));
   updateTitle();
   document.getElementById('formAnchor').scrollIntoView({behavior:'smooth'});
   showToast('✏️ 수정 모드 — 내용 변경 후 다시 제출해주세요');
 }
+
 function renderCards(data,order){
   const grid=document.getElementById('cardsGrid');grid.innerHTML='';
   order.forEach((name,idx)=>{
@@ -380,18 +370,37 @@ function renderCards(data,order){
       const dp=String(entry.done||'').split('\n').filter(Boolean);
       const tp=String(entry.todo||'').split('\n').filter(Boolean);
       const ts=formatTimestamp(entry.timestamp);
-      card.innerHTML=`<div class="scard-top ${s.pal}"></div><div class="scard-body"><div class="scard-hd"><span class="scard-name">${entry.name}</span><div class="scard-score"><span class="scard-e">${s.e}</span><span class="scard-badge ${s.badge}">${s.lbl}</span></div></div>${entry.reason?`<div class="scard-quote">"${entry.reason}"</div>`:''}<div class="scard-div"></div><div class="scard-sec"><span class="scard-sec-lbl">✅ 완료한 일</span><div class="scard-sec-body">${dp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||String(entry.done)}</div></div><div class="scard-sec"><span class="scard-sec-lbl">📌 앞으로 할 일</span><div class="scard-sec-body">${tp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||String(entry.todo)}</div></div>${entry.issue?`<div class="scard-sec"><span class="scard-sec-lbl">💬 이슈/공유</span><div class="scard-sec-body">${String(entry.issue)}</div></div>`:''}<div style="display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:4px;"><span class="scard-time">제출 ${ts}</span><button onclick='fillForm(${JSON.stringify(entry).replace(/'/g,"&#39;")})' style="font-size:10px;font-weight:700;color:var(--ink-soft);background:var(--cream);border:1.5px solid var(--border);border-radius:6px;padding:3px 10px;cursor:pointer;">✏️ 수정</button></div></div>`;
+      const entryJson=JSON.stringify(entry).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      card.innerHTML=`
+        <div class="scard-top ${s.pal}"></div>
+        <div class="scard-body">
+          <div class="scard-hd">
+            <span class="scard-name">${entry.name}</span>
+            <div class="scard-score"><span class="scard-e">${s.e}</span><span class="scard-badge ${s.badge}">${s.lbl}</span></div>
+          </div>
+          ${entry.reason?`<div class="scard-quote">"${String(entry.reason)}"</div>`:''}
+          <div class="scard-div"></div>
+          <div class="scard-sec"><span class="scard-sec-lbl">✅ 완료한 일</span><div class="scard-sec-body">${dp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||String(entry.done)}</div></div>
+          <div class="scard-sec"><span class="scard-sec-lbl">📌 앞으로 할 일</span><div class="scard-sec-body">${tp.map(p=>'• '+p.replace(/^[•\-\s]+/,'')).join('<br>')||String(entry.todo)}</div></div>
+          ${entry.issue?`<div class="scard-sec"><span class="scard-sec-lbl">💬 이슈/공유</span><div class="scard-sec-body">${String(entry.issue)}</div></div>`:''}
+          <div class="scard-ft">
+            <span class="scard-time">제출 ${ts}</span>
+            <button class="edit-btn" onclick='fillForm(JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(entry))}")))'}>✏️ 수정</button>
+          </div>
+        </div>`;
     }else{
       card.innerHTML=`<div class="empty-inner"><span class="empty-face">🫥</span><span class="empty-name">${name}</span><span class="empty-msg">${ROASTS[idx%ROASTS.length](name)}</span></div>`;
     }
     grid.appendChild(card);
   });
 }
+
 function updateTitle(){const n=document.getElementById('fName').value;document.getElementById('autoTitle').textContent=n?`${kstDisplay()} ${n} 스크럼 회의`:'담당자를 선택해주세요';}
 function pickScore(el,val){document.querySelectorAll('.s-opt').forEach(o=>o.classList.remove('on'));el.classList.add('on');selScore=val;}
 function resetForm(){['fName','fReason','fDone','fTodo','fIssue'].forEach(id=>document.getElementById(id).value='');selScore='';document.querySelectorAll('.s-opt').forEach(o=>o.classList.remove('on'));updateTitle();}
 function scrollToForm(){document.getElementById('formAnchor').scrollIntoView({behavior:'smooth'});}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3000);}
+
 setInterval(loadData,60000);
 document.getElementById('hdDate').textContent=kstDisplay();
 updateTitle();loadData();
